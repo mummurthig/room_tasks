@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>March 2026 - Room Duty Timetable</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background: #f0f4f8; margin: 0; padding: 16px; }
+  h1 { text-align: center; color: #1e3a5f; margin-bottom: 4px; font-size: 20px; }
+  .subtitle { text-align: center; color: #555; margin-bottom: 16px; font-size: 13px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; }
+  .dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+  table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; font-size: 12px; }
+  th { background: #1e3a5f; color: white; padding: 9px 5px; text-align: center; }
+  td { padding: 6px 4px; text-align: center; border: 1px solid #dde3ed; vertical-align: middle; }
+  tr:nth-child(even) td { background: #f7f9fc; }
+  .sunday td { background: #fff8e1 !important; }
+  .day-label { font-weight: bold; font-size: 11px; }
+  .sun-label { color: #c0392b; }
+  .tag { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; white-space: nowrap; }
+  .water    { background: #cce5ff; color: #004085; }
+  .waste    { background: #d4edda; color: #155724; }
+  .restroom { background: #f8d7da; color: #721c24; }
+  .vessel-m { background: #fff3cd; color: #856404; }
+  .vessel-n { background: #ffe0b2; color: #7b3f00; }
+  .none     { color: #ccc; font-size: 11px; }
+  .summary-box { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 14px 18px; margin-top: 18px; }
+  .summary-box h2 { color: #1e3a5f; margin: 0 0 12px; font-size: 15px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .member-card { background: #f0f4f8; border-radius: 8px; padding: 10px 8px; }
+  .member-card h3 { margin: 0 0 6px; color: #1e3a5f; font-size: 13px; text-align: center; border-bottom: 2px solid #1e3a5f; padding-bottom: 4px; }
+  .note-box { background: #e8f4fd; border-left: 4px solid #1e3a5f; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #333; }
+</style>
+</head>
+<body>
+<h1>Room Duty Timetable - March 2026</h1>
+<p class="subtitle">Members: Murthi | Vijay | Solai | Annamalai | Gokul</p>
+<div class="note-box"><b>Rule:</b> Each person is assigned <b>only ONE task per day</b>. Tasks rotate fairly across all 5 members.</div>
+<div class="legend">
+  <div class="legend-item"><div class="dot" style="background:#cce5ff"></div> Water Cane (every 3 days)</div>
+  <div class="legend-item"><div class="dot" style="background:#d4edda"></div> Waste Disposal (every 3 days)</div>
+  <div class="legend-item"><div class="dot" style="background:#f8d7da"></div> Restroom (every Sunday)</div>
+  <div class="legend-item"><div class="dot" style="background:#fff3cd"></div> Vessel Wash Morning (daily)</div>
+  <div class="legend-item"><div class="dot" style="background:#ffe0b2"></div> Vessel Wash Night (daily)</div>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th style="width:80px">Date</th>
+      <th style="width:36px">Day</th>
+      <th>Murthi</th><th>Vijay</th><th>Solai</th><th>Gokul</th><th>Annamalai</th>
+    </tr>
+  </thead>
+  <tbody id="tableBody"></tbody>
+</table>
+<div class="summary-box">
+  <h2>Monthly Duty Summary</h2>
+  <div class="summary-grid" id="summaryGrid"></div>
+</div>
+<script>
+const members = ['Murthi','Vijay','Solai','Gokul','Annamalai'];
+const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const totalDays = 31;
+const startDow = 0;
+
+const schedule = [];
+for(let d = 0; d < totalDays; d++){
+  const obj = {};
+  members.forEach(m => obj[m] = null);
+  schedule.push(obj);
+}
+
+let waterIdx=0, wasteIdx=0, restroomIdx=0, vesselMIdx=0, vesselNIdx=0;
+
+function assign(dayIdx, startIdx, taskName) {
+  for(let i = 0; i < members.length; i++){
+    const m = members[(startIdx + i) % members.length];
+    if(schedule[dayIdx][m] === null){
+      schedule[dayIdx][m] = taskName;
+      return startIdx + i + 1;
+    }
+  }
+  // all taken, force assign to next
+  const m = members[startIdx % members.length];
+  schedule[dayIdx][m] = taskName;
+  return startIdx + 1;
+}
+
+for(let d = 0; d < totalDays; d++){
+  const dow = (startDow + d) % 7;
+  const dayNum = d + 1;
+
+  if(dow === 0) restroomIdx = assign(d, restroomIdx, 'restroom');
+  if((dayNum - 1) % 3 === 0) waterIdx = assign(d, waterIdx, 'water');
+  if(dayNum >= 2 && (dayNum - 2) % 3 === 0) wasteIdx = assign(d, wasteIdx, 'waste');
+  vesselMIdx = assign(d, vesselMIdx, 'vesselM');
+  vesselNIdx = assign(d, vesselNIdx, 'vesselN');
+}
+
+const counts = {};
+members.forEach(m => counts[m] = {water:0,waste:0,restroom:0,vesselM:0,vesselN:0});
+const tbody = document.getElementById('tableBody');
+
+for(let d = 0; d < totalDays; d++){
+  const dow = (startDow + d) % 7;
+  const isSun = dow === 0;
+  const tr = document.createElement('tr');
+  if(isSun) tr.className = 'sunday';
+  tr.innerHTML = `<td>Mar ${String(d+1).padStart(2,'0')}</td><td><span class="day-label ${isSun?'sun-label':''}">${dayNames[dow]}</span></td>`;
+  members.forEach(m => {
+    const task = schedule[d][m];
+    let cell = '<span class="none">-</span>';
+    if(task==='water')    { cell='<span class="tag water">Water</span>';      counts[m].water++;    }
+    if(task==='waste')    { cell='<span class="tag waste">Waste</span>';      counts[m].waste++;    }
+    if(task==='restroom') { cell='<span class="tag restroom">Restroom</span>';counts[m].restroom++; }
+    if(task==='vesselM')  { cell='<span class="tag vessel-m">Vessel(M)</span>';counts[m].vesselM++; }
+    if(task==='vesselN')  { cell='<span class="tag vessel-n">Vessel(N)</span>';counts[m].vesselN++; }
+    tr.innerHTML += `<td>${cell}</td>`;
+  });
+  tbody.appendChild(tr);
+}
+
+const grid = document.getElementById('summaryGrid');
+members.forEach(m => {
+  const c = counts[m];
+  const total = c.water+c.waste+c.restroom+c.vesselM+c.vesselN;
+  const div = document.createElement('div');
+  div.className = 'member-card';
+  div.innerHTML = `<h3>${m}</h3><ul style="padding-left:14px;margin:0;font-size:11px">
+    <li>Water: <b>${c.water}</b></li>
+    <li>Waste: <b>${c.waste}</b></li>
+    <li>Restroom: <b>${c.restroom}</b></li>
+    <li>Vessel(M): <b>${c.vesselM}</b></li>
+    <li>Vessel(N): <b>${c.vesselN}</b></li>
+    <li style="margin-top:5px;border-top:1px solid #ccc;padding-top:4px">Total: <b>${total}</b></li>
+  </ul>`;
+  grid.appendChild(div);
+});
+</script>
+</body>
+</html>
