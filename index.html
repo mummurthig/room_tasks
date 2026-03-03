@@ -16,127 +16,256 @@
   td { padding: 6px 4px; text-align: center; border: 1px solid #dde3ed; vertical-align: middle; }
   tr:nth-child(even) td { background: #f7f9fc; }
   .sunday td { background: #fff8e1 !important; }
+  .saturday td { background: #fdf4ff !important; }
   .day-label { font-weight: bold; font-size: 11px; }
   .sun-label { color: #c0392b; }
+  .sat-label { color: #8e44ad; }
   .tag { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; white-space: nowrap; }
   .water    { background: #cce5ff; color: #004085; }
   .waste    { background: #d4edda; color: #155724; }
   .restroom { background: #f8d7da; color: #721c24; }
   .vessel-m { background: #fff3cd; color: #856404; }
   .vessel-n { background: #ffe0b2; color: #7b3f00; }
-  .none     { color: #ccc; font-size: 11px; }
-  .summary-box { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 14px 18px; margin-top: 18px; }
-  .summary-box h2 { color: #1e3a5f; margin: 0 0 12px; font-size: 15px; }
+  .none  { color: #ccc; font-size: 11px; }
+  .skip  { color: #bbb; font-size: 10px; font-style: italic; }
+  .card-box { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 14px 18px; margin-top: 18px; }
+  .card-box h2 { color: #1e3a5f; margin: 0 0 12px; font-size: 15px; }
   .summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
   .member-card { background: #f0f4f8; border-radius: 8px; padding: 10px 8px; }
   .member-card h3 { margin: 0 0 6px; color: #1e3a5f; font-size: 13px; text-align: center; border-bottom: 2px solid #1e3a5f; padding-bottom: 4px; }
-  .note-box { background: #e8f4fd; border-left: 4px solid #1e3a5f; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #333; }
+  .note-box { background: #e8f4fd; border-left: 4px solid #1e3a5f; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; color: #333; line-height: 1.8; }
+  /* Penalty */
+  .penalty-title { color: #c0392b !important; }
+  .ptable { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+  .ptable th { background: #c0392b; color: white; padding: 8px 5px; text-align: center; }
+  .ptable td { padding: 7px 5px; text-align: center; border: 1px solid #f0d0d0; vertical-align: middle; }
+  .ptable tfoot td { background: #fff0f0; font-weight: bold; color: #c0392b; font-size: 13px; padding: 8px 5px; }
+  .ptable input[type=number] { width: 46px; padding: 3px 4px; text-align: center; border: 1px solid #ccc; border-radius: 5px; font-size: 12px; }
+  .fine-amt { font-weight: bold; color: #c0392b; font-size: 11px; display: block; margin-top: 2px; }
+  .pnote { font-size: 11px; color: #999; text-align: center; margin: 8px 0 0; }
+  .reset-btn { display: block; margin: 10px auto 0; padding: 6px 20px; background: #c0392b; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 12px; }
+  .reset-btn:hover { background: #a93226; }
 </style>
 </head>
 <body>
 <h1>Room Duty Timetable - March 2026</h1>
-<p class="subtitle">Members: Murthi | Vijay | Solai | Annamalai | Gokul</p>
-<div class="note-box"><b>Rule:</b> Each person is assigned <b>only ONE task per day</b>. Tasks rotate fairly across all 5 members.</div>
+<p class="subtitle">Members: Murthi | Vijay | Annamalai | Gokul | Solai</p>
+<div class="note-box">
+  <b>Rules:</b><br>
+  ✅ One person → One task per day, equal tasks for everyone<br>
+  🚫 <b>Vijay</b> — No tasks on Sat &amp; Sun (others cover)<br>
+  🍽️ <b>Vijay</b> — Gets Vessel Morning on <b>Mondays</b><br>
+  🌙 <b>Vijay</b> — Takes Vessel Night originally on <b>Friday/Sunday</b>, moved to his free weekday<br>
+  🚽 Restroom rotates all 5 equally — Vijay's Sunday turn → moved to <b>that week's Friday</b>
+</div>
 <div class="legend">
   <div class="legend-item"><div class="dot" style="background:#cce5ff"></div> Water Cane (every 3 days)</div>
   <div class="legend-item"><div class="dot" style="background:#d4edda"></div> Waste Disposal (every 3 days)</div>
-  <div class="legend-item"><div class="dot" style="background:#f8d7da"></div> Restroom (every Sunday)</div>
-  <div class="legend-item"><div class="dot" style="background:#fff3cd"></div> Vessel Wash Morning (daily)</div>
-  <div class="legend-item"><div class="dot" style="background:#ffe0b2"></div> Vessel Wash Night (daily)</div>
+  <div class="legend-item"><div class="dot" style="background:#f8d7da"></div> Restroom (Sunday / Vijay→Friday)</div>
+  <div class="legend-item"><div class="dot" style="background:#fff3cd"></div> Vessel Morning (daily)</div>
+  <div class="legend-item"><div class="dot" style="background:#ffe0b2"></div> Vessel Night (daily)</div>
 </div>
 <table>
   <thead>
     <tr>
-      <th style="width:80px">Date</th>
-      <th style="width:36px">Day</th>
-      <th>Murthi</th><th>Vijay</th><th>Solai</th><th>Gokul</th><th>Annamalai</th>
+      <th style="width:80px">Date</th><th style="width:36px">Day</th>
+      <th>Murthi</th><th>Vijay</th><th>Annamalai</th><th>Gokul</th><th>Solai</th>
     </tr>
   </thead>
   <tbody id="tableBody"></tbody>
 </table>
-<div class="summary-box">
-  <h2>Monthly Duty Summary</h2>
+
+<!-- Monthly Summary -->
+<div class="card-box">
+  <h2>📊 Monthly Duty Summary</h2>
   <div class="summary-grid" id="summaryGrid"></div>
 </div>
+
+<!-- Penalty Section -->
+<div class="card-box">
+  <h2 class="penalty-title">⚠️ Penalty Chart — Missing Duty Fine (₹)</h2>
+  <table class="ptable">
+    <thead>
+      <tr>
+        <th>Task</th><th>Fine/Miss</th>
+        <th>Murthi</th><th>Vijay</th><th>Annamalai</th><th>Gokul</th><th>Solai</th>
+      </tr>
+    </thead>
+    <tbody id="penaltyBody"></tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"><b>💰 Total Fine (₹)</b></td>
+        <td id="tot_Murthi">₹0</td>
+        <td id="tot_Vijay">₹0</td>
+        <td id="tot_Annamalai">₹0</td>
+        <td id="tot_Gokul">₹0</td>
+        <td id="tot_Solai">₹0</td>
+      </tr>
+    </tfoot>
+  </table>
+  <p class="pnote">* Type number of missed tasks per person. Fine updates automatically.</p>
+  <button class="reset-btn" onclick="resetAll()">🔄 Reset All</button>
+</div>
+
 <script>
-const members = ['Murthi','Vijay','Solai','Gokul','Annamalai'];
+const members = ['Murthi','Vijay','Annamalai','Gokul','Solai'];
+const othersOnly = ['Murthi','Annamalai','Gokul','Solai'];
 const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const totalDays = 31;
-const startDow = 0;
+const totalDays = 31, startDow = 0;
 
 const schedule = [];
-for(let d = 0; d < totalDays; d++){
-  const obj = {};
-  members.forEach(m => obj[m] = null);
-  schedule.push(obj);
-}
+for(let d = 0; d < totalDays; d++){ const o={}; members.forEach(m=>o[m]=null); schedule.push(o); }
 
-let waterIdx=0, wasteIdx=0, restroomIdx=0, vesselMIdx=0, vesselNIdx=0;
+const dw = d => (startDow+d)%7;
+const isWE = d => dw(d)===0||dw(d)===6;
 
-function assign(dayIdx, startIdx, taskName) {
-  for(let i = 0; i < members.length; i++){
-    const m = members[(startIdx + i) % members.length];
-    if(schedule[dayIdx][m] === null){
-      schedule[dayIdx][m] = taskName;
-      return startIdx + i + 1;
-    }
+function assign(di, pool, idx, task){
+  for(let i=0;i<pool.length;i++){
+    const m=pool[(idx+i)%pool.length];
+    if(schedule[di][m]===null){ schedule[di][m]=task; return idx+i+1; }
   }
-  // all taken, force assign to next
-  const m = members[startIdx % members.length];
-  schedule[dayIdx][m] = taskName;
-  return startIdx + 1;
+  schedule[di][pool[idx%pool.length]]=task; return idx+1;
 }
 
-for(let d = 0; d < totalDays; d++){
-  const dow = (startDow + d) % 7;
-  const dayNum = d + 1;
+let wI=0,wsI=0,rI=0,vmI=0,vnI=0;
 
-  if(dow === 0) restroomIdx = assign(d, restroomIdx, 'restroom');
-  if((dayNum - 1) % 3 === 0) waterIdx = assign(d, waterIdx, 'water');
-  if(dayNum >= 2 && (dayNum - 2) % 3 === 0) wasteIdx = assign(d, wasteIdx, 'waste');
-  vesselMIdx = assign(d, vesselMIdx, 'vesselM');
-  vesselNIdx = assign(d, vesselNIdx, 'vesselN');
+// Water, Waste, Restroom
+for(let d=0;d<totalDays;d++){
+  const w=dw(d), dn=d+1, pool=isWE(d)?othersOnly:members;
+  if((dn-1)%3===0) wI=assign(d,pool,wI,'water');
+  if(dn>=2&&(dn-2)%3===0) wsI=assign(d,pool,wsI,'waste');
+  if(w===0){
+    const nm=members[rI%members.length];
+    if(nm==='Vijay'){
+      const fri=d-2;
+      if(fri>=0&&schedule[fri]['Vijay']===null) schedule[fri]['Vijay']='restroom';
+      else { for(let f=d+1;f<totalDays;f++){ if(!isWE(f)&&schedule[f]['Vijay']===null){schedule[f]['Vijay']='restroom';break;} } }
+      rI++;
+    } else { rI=assign(d,members,rI,'restroom'); }
+  }
 }
 
-const counts = {};
-members.forEach(m => counts[m] = {water:0,waste:0,restroom:0,vesselM:0,vesselN:0});
-const tbody = document.getElementById('tableBody');
+// Vessel Morning — every day; Vijay gets Monday, skipped weekends
+for(let d=0;d<totalDays;d++){
+  const w=dw(d);
+  if(w===1){ // Monday → Vijay priority
+    if(schedule[d]['Vijay']===null) schedule[d]['Vijay']='vesselM';
+    else vmI=assign(d,othersOnly,vmI,'vesselM');
+  } else if(isWE(d)){
+    vmI=assign(d,othersOnly,vmI,'vesselM');
+  } else {
+    vmI=assign(d,members,vmI,'vesselM');
+  }
+}
 
-for(let d = 0; d < totalDays; d++){
-  const dow = (startDow + d) % 7;
-  const isSun = dow === 0;
-  const tr = document.createElement('tr');
-  if(isSun) tr.className = 'sunday';
-  tr.innerHTML = `<td>Mar ${String(d+1).padStart(2,'0')}</td><td><span class="day-label ${isSun?'sun-label':''}">${dayNames[dow]}</span></td>`;
-  members.forEach(m => {
-    const task = schedule[d][m];
-    let cell = '<span class="none">-</span>';
-    if(task==='water')    { cell='<span class="tag water">Water</span>';      counts[m].water++;    }
-    if(task==='waste')    { cell='<span class="tag waste">Waste</span>';      counts[m].waste++;    }
-    if(task==='restroom') { cell='<span class="tag restroom">Restroom</span>';counts[m].restroom++; }
-    if(task==='vesselM')  { cell='<span class="tag vessel-m">Vessel(M)</span>';counts[m].vesselM++; }
-    if(task==='vesselN')  { cell='<span class="tag vessel-n">Vessel(N)</span>';counts[m].vesselN++; }
-    tr.innerHTML += `<td>${cell}</td>`;
+// Vessel Night — every day; Fri/Sun → othersOnly get it, give Vijay extra on free weekday
+const vijayVNCount = {fri:0,sun:0};
+for(let d=0;d<totalDays;d++){
+  const w=dw(d);
+  if(w===5||w===0){ // Fri or Sun
+    vnI=assign(d,othersOnly,vnI,'vesselN');
+    vijayVNCount[w===5?'fri':'sun']++;
+  } else if(isWE(d)){
+    vnI=assign(d,othersOnly,vnI,'vesselN');
+  } else {
+    vnI=assign(d,members,vnI,'vesselN');
+  }
+}
+// Give Vijay extra VN on free weekdays for Fri+Sun slots
+let extra = vijayVNCount.fri + vijayVNCount.sun, given=0;
+for(let d=0;d<totalDays&&given<extra;d++){
+  const w=dw(d);
+  if(w>=1&&w<=4&&schedule[d]['Vijay']===null){ schedule[d]['Vijay']='vesselN'; given++; }
+}
+
+// Render
+const counts={};
+members.forEach(m=>counts[m]={water:0,waste:0,restroom:0,vesselM:0,vesselN:0});
+const tbody=document.getElementById('tableBody');
+
+function tag(t){
+  if(t==='water')    return '<span class="tag water">Water</span>';
+  if(t==='waste')    return '<span class="tag waste">Waste</span>';
+  if(t==='restroom') return '<span class="tag restroom">Restroom</span>';
+  if(t==='vesselM')  return '<span class="tag vessel-m">Vessel(M)</span>';
+  if(t==='vesselN')  return '<span class="tag vessel-n">Vessel(N)</span>';
+  return '';
+}
+
+for(let d=0;d<totalDays;d++){
+  const w=dw(d), isSun=w===0, isSat=w===6, we=isSun||isSat;
+  const tr=document.createElement('tr');
+  if(isSun) tr.className='sunday'; else if(isSat) tr.className='saturday';
+  const dl=isSun?'sun-label':isSat?'sat-label':'';
+  tr.innerHTML=`<td>Mar ${String(d+1).padStart(2,'0')}</td><td><span class="day-label ${dl}">${dayNames[w]}</span></td>`;
+  members.forEach(m=>{
+    const t=schedule[d][m];
+    let cell='';
+    if(m==='Vijay'&&we&&!t) cell='<span class="skip">day off</span>';
+    else if(t){ cell=tag(t); counts[m][t]++; }
+    else cell='<span class="none">—</span>';
+    tr.innerHTML+=`<td>${cell}</td>`;
   });
   tbody.appendChild(tr);
 }
 
-const grid = document.getElementById('summaryGrid');
-members.forEach(m => {
-  const c = counts[m];
-  const total = c.water+c.waste+c.restroom+c.vesselM+c.vesselN;
-  const div = document.createElement('div');
-  div.className = 'member-card';
-  div.innerHTML = `<h3>${m}</h3><ul style="padding-left:14px;margin:0;font-size:11px">
-    <li>Water: <b>${c.water}</b></li>
-    <li>Waste: <b>${c.waste}</b></li>
-    <li>Restroom: <b>${c.restroom}</b></li>
-    <li>Vessel(M): <b>${c.vesselM}</b></li>
-    <li>Vessel(N): <b>${c.vesselN}</b></li>
-    <li style="margin-top:5px;border-top:1px solid #ccc;padding-top:4px">Total: <b>${total}</b></li>
+// Summary cards
+const grid=document.getElementById('summaryGrid');
+members.forEach(m=>{
+  const c=counts[m], tot=c.water+c.waste+c.restroom+c.vesselM+c.vesselN;
+  const div=document.createElement('div'); div.className='member-card';
+  div.innerHTML=`<h3>${m}</h3><ul style="padding-left:14px;margin:0;font-size:11px">
+    <li>💧 Water: <b>${c.water}</b></li><li>🗑️ Waste: <b>${c.waste}</b></li>
+    <li>🚽 Restroom: <b>${c.restroom}</b></li><li>🍽️ Vessel(M): <b>${c.vesselM}</b></li>
+    <li>🌙 Vessel(N): <b>${c.vesselN}</b></li>
+    <li style="margin-top:5px;border-top:1px solid #ccc;padding-top:4px"><b>Total: ${tot}</b></li>
   </ul>`;
   grid.appendChild(div);
 });
+
+// ── Penalty Section ──
+const penaltyRules = [
+  { label:'🍽️ Vessel Morning', key:'vesselM', rate:50  },
+  { label:'🌙 Vessel Night',   key:'vesselN', rate:50  },
+  { label:'💧 Water Cane',     key:'water',   rate:50  },
+  { label:'🚽 Restroom',       key:'restroom',rate:150 },
+  { label:'🗑️ Waste Disposal', key:'waste',   rate:70  },
+];
+
+const pb=document.getElementById('penaltyBody');
+penaltyRules.forEach(p=>{
+  const tr=document.createElement('tr');
+  let html=`<td><b>${p.label}</b></td><td style="color:#c0392b;font-weight:bold">₹${p.rate}</td>`;
+  members.forEach(m=>{
+    html+=`<td>
+      <input type="number" min="0" value="0" id="inp_${p.key}_${m}" oninput="calc()">
+      <span class="fine-amt" id="famt_${p.key}_${m}">₹0</span>
+    </td>`;
+  });
+  tr.innerHTML=html; pb.appendChild(tr);
+});
+
+function calc(){
+  const totals={};
+  members.forEach(m=>totals[m]=0);
+  penaltyRules.forEach(p=>{
+    members.forEach(m=>{
+      const v=Math.max(0,parseInt(document.getElementById(`inp_${p.key}_${m}`).value)||0);
+      const f=v*p.rate;
+      document.getElementById(`famt_${p.key}_${m}`).textContent=`₹${f}`;
+      totals[m]+=f;
+    });
+  });
+  members.forEach(m=>document.getElementById(`tot_${m}`).textContent=`₹${totals[m]}`);
+}
+
+function resetAll(){
+  penaltyRules.forEach(p=>members.forEach(m=>{
+    document.getElementById(`inp_${p.key}_${m}`).value=0;
+    document.getElementById(`famt_${p.key}_${m}`).textContent='₹0';
+  }));
+  members.forEach(m=>document.getElementById(`tot_${m}`).textContent='₹0');
+}
 </script>
 </body>
 </html>
